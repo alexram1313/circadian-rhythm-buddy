@@ -1,0 +1,24 @@
+{
+    "low": [
+        "Golf", "Billiards", "Bowling", "Cricket", "Curling", "Riflery", 
+        "Diving", "Archery", "Equestrian", "Motorcycling", "Auto Racing",
+        "Weight lifting", "Gymnastics", "Martial arts", "Throwing Field events",
+        "Bobsledding or luge", "Sailing","climbing", "Water Skiing", "Weight lifting",
+        "Wind Surfing"
+    ],
+
+    "medium": [
+        "Volleyball", "Baseball", "Softball", "Doubles Tennis", "Table Tennis","Fencing",
+        "Rugby", "American Football", "Sprint Running", "Jumping Field Events",
+        "Figure skating", "Rodeo", "Surfing", "Synchronized swimming",
+        "Wrestling", "Downhill Skiing", "Snow boarding", "Body building","Skate Boarding"
+    ],
+
+    "high": [
+        "Distance Running", "Soccer", "Classic Cross Country Skiing", "Singles Tennis",
+        "Badminton", "Field Hockey", "Orienteering", "Race Walking", "Racquetball", "Squash",
+        "Basketball", "Skate Cross Country Skiing", "Ice hockey", "Lacrosse", "Swimming",
+        "Middle Distance Running", "Team handball", "Boxing", "Cycling", "Rowing", "Canoeing",
+        "Kayaking", "Decathalon", "Triathalon", "Speed skating"
+    ]
+}
