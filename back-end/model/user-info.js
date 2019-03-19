@@ -13,11 +13,11 @@ var UserInfoSchema = new mongoose.Schema({
             default: null
         },
         wake: {
-            type: Date, 
+            type: String, 
             default: null
         },
-        sleep: { // iso 8601
-            type: Date, 
+        sleep: {
+            type: String, 
             default: null
         }
     },
