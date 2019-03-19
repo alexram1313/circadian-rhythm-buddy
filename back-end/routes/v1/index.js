@@ -21,8 +21,8 @@ router.post('/userinfo', function(req, res){
 
     // Put into db
     UserInfoExport.UserInfo.deleteMany({}, function(err){
-        if (err) res.status(500).json({success: false, message:'Could not save to database'});
-        else UserInfoExport.UserInfo.create({
+        if (err) return res.status(500).json({success: false, message:'Could not save to database'});
+        UserInfoExport.UserInfo.create({
             records: req.body
         }, function(err){
             if (err) res.status(500).json({success: false, message:'Could not save to database'});

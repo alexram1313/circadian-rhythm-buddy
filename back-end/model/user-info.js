@@ -1,5 +1,5 @@
 var mongoose = require("mongoose");
-
+const credential = require('../config/credential');
 
 var UserInfoSchema = new mongoose.Schema({
 
@@ -20,13 +20,9 @@ var UserInfoSchema = new mongoose.Schema({
             type: String, 
             default: null
         }
-    },
-    _id:  {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
     }
 })
-
+mongoose.connect(`mongodb://${credential.MONGO_USER}:${credential.MONGO_PASS}@ds117866.mlab.com:17866/circadian`, {useNewUrlParser: true});
 var UserInfo = mongoose.model('UserInfo', UserInfoSchema);
 
 module.exports = {UserInfo};
