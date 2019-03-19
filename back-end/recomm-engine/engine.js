@@ -4,6 +4,8 @@ var credential = require("../config/credential");
 const {estimate_cr, deter_intensity, active_request} = require("./engine-lib");
 const EXERINTENSITYLIB = require('./exer-intensity');
 
+var UserInfo = require('../model/user-info');
+
 const fs = require('fs');
 
 
@@ -12,7 +14,15 @@ const search_activities = async (heart_rates, curr_time, lat, lon) => {
     let intensity = await deter_intensity(heart_rates);
     
     let topic_names = await _build_topic_name(intensity);
-    let qry = await _build_query(lat, lon, topic_names, curr_time);
+
+    let results = await UserInfo.UserInfo.find({}).exec();
+    let qry;
+    if (results.length){
+        qry = await _build_query(lat, lon, topic_names, curr_time, results[0].records.gender);        
+    } else {
+        qry = await _build_query(lat, lon, topic_names, curr_time);
+    }
+
     console.log(qry)
     let activities = await _get_activities(qry);
 
@@ -46,8 +56,8 @@ const _get_activities = async (qry) => {
     });
 }
 
-const _build_query = async (lat, long, topic_name, curr_time) => {
-    return `api_key=${credential.API_KEY}&lat_lon=${lat+ ',' +long}&topic=${topic_name}&start_date=${curr_time + '..'}`;
+const _build_query = async (lat, long, topic_name, curr_time, gender) => {
+    return `api_key=${credential.API_KEY}&lat_lon=${lat+ ',' +long}&topic=${topic_name}&start_date=${curr_time + '..'}&attributes=gender:all${(typeof gender !=='undefined')?' OR gender:'+gender : ''}`;
 }
 
 const _build_topic_name = async (intensity) => {
