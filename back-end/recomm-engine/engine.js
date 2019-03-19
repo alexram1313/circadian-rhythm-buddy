@@ -5,6 +5,7 @@ const {estimate_cr, deter_intensity, active_request} = require("./engine-lib");
 const EXERINTENSITYLIB = require('./exer-intensity');
 
 var UserInfo = require('../model/user-info');
+var TopicCount = require('../model/user-topic-count');
 
 const fs = require('fs');
 
@@ -26,7 +27,29 @@ const search_activities = async (heart_rates, curr_time, lat, lon) => {
     console.log(qry)
     let activities = await _get_activities(qry);
 
-    console.log((activities));
+    // Basic Ranking based on previous choices
+    let topics = await TopicCount.UserTopicCount.find().exec();
+    if (topics.length){
+        let scores = {};
+        topics.forEach(element=>{
+            scores[element.topic_name] = element.count
+        });
+
+        for (let i = 0; i < activities.length; ++i){
+            let assetTopics = activities[i].assetTopics;
+            let score = 0;
+            for (let j = 0; j < assetTopics.length; ++j){
+                if (scores.hasOwnProperty(assetTopics[j].topic.topicName)){
+                    score += scores[assetTopics[j].topic.topicName];
+                }
+            }
+
+            activities[i]['score'] = score;
+        }
+
+        activities.sort((a,b)=>{return b.score - a.score});
+    }
+    
     return activities;
 }
 
@@ -94,6 +117,11 @@ const main = async () => {
    
     //console.log(qry);
     //get_activities(qry);
+
+    TopicCount.UserTopicCount.findOneAndUpdate({topic_name:'Sailing'}, 
+        {$inc:{count: 1}},
+    {upsert: true}).exec();
+
     let heart_rates = {
         x : [1,3,4,6,7,8],
         y : [1,2,4,2,3,1] 

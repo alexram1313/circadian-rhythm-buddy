@@ -9,7 +9,7 @@ var UserTopicCountSchema = new mongoose.Schema({
     },
     count: {
         type: Number,
-        default: 0,
+        required:true,
     }
 })
 mongoose.connect(`mongodb://${credential.MONGO_USER}:${credential.MONGO_PASS}@ds117866.mlab.com:17866/circadian`, {useNewUrlParser: true});
