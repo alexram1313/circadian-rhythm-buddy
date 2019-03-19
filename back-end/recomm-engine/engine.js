@@ -27,7 +27,7 @@ const filter_out = async (activities, curr_time) => {
 
 const _get_active_search_base_url = async() => {
     return config.PROTOCOL+'://'+config.ACTIVE_API_BASE+'/'
-    +config.ACTIVE_API_VERSION+'/'+config.ACTIVE_API_SEARCH
+    +config.ACTIVE_API_VERSION+'/'+config.ACTIVE_API_SEARCH+'/';
 }
 
 const _get_activities = async (qry) => {
@@ -35,26 +35,19 @@ const _get_activities = async (qry) => {
     var baseurl = await _get_active_search_base_url();
     
     return new Promise((resolve, reject) => {
-        reqeust({
-                url:baseurl,
-                qs:qry
-            }, (err, response, body) => {
-                if(err)
-                    reject(err);
+        reqeust(baseurl+'?'+qry, (err, response, body) => {
+            if(err)
+                reject(err);
+        
             
-                var obj = JSON.parse(body);
-                resolve(obj.results);
-        })});
+            var obj = JSON.parse(body);
+            resolve(obj.results);
+        })
+    });
 }
 
 const _build_query = async (lat, long, topic_name, curr_time) => {
-    var qry = {
-        api_key : credential.API_KEY,
-        lat_lon : lat+ ',' +long,
-        topicName: topic_name,
-        start_date: curr_time
-    }
-    return qry;
+    return `api_key=${credential.API_KEY}&lat_lon=${lat+ ',' +long}&topic=${topic_name}&start_date=${curr_time + '..'}`;
 }
 
 const _build_topic_name = async (intensity) => {
@@ -63,7 +56,7 @@ const _build_topic_name = async (intensity) => {
     var end = topics.length-1;
     for (var i = 0; i < topics.length-1; i++){
         result += topics[i];
-        result += "20%OR";
+        result += "%20OR%20";
     }
     result += topics[end];
     return result
@@ -99,3 +92,7 @@ const main = async () => {
 }
 
 main();
+
+module.exports = {
+    search_activities
+};

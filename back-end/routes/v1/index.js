@@ -3,6 +3,8 @@ var express = require('express');
 var router = express.Router();
 var UserInfoExport = require('../../model/user-info')
 
+var recomEngine = require('../../recomm-engine/engine');
+
 
 router.get('/', function(req,res){
     res.json({'message':"Connected to Circadian Rhythm Buddy API v1"})
@@ -31,8 +33,22 @@ router.post('/userinfo', function(req, res){
     });
 });
 
-router.get('/activities', function(req,res){
+router.get('/activities', async function(req,res){
+    if (typeof req.query.lat === 'undefined') return res.status(400).json({'success':false, 'message':'Must include lat in GET request.'});
+    if (typeof req.query.lon === 'undefined') return res.status(400).json({'success':false, 'message':'Must include lon in GET request.'});
 
+    
+    let heart_rates = {
+        x : [1,3,4,6,7,8],
+        y : [1,2,4,2,3,1] 
+    };
+    let activities = await recomEngine.search_activities(heart_rates, "2019-03-17T15:00:00", "33.6295", "-117.8684" );
+    console.log(activities);
+    res.json(activities);
 });
+
+router.post('/activities/:id', function(req, res){
+
+})
 
 module.exports = router;

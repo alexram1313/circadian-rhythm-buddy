@@ -14,10 +14,10 @@ const max_vo2 =  (hr_rest, age) => {
 const deter_intensity = async (hr_rates) => {
     let cr_rhythm = await estimate_cr(hr_rates.x, hr_rates.y);
     
-    if(cr_rhythm >= 0.7){
+    if(cr_rhythm[cr_rhythm.length-1] >= 0.7){
         return "high"
     }
-    else if(cr_rhythm < 0.7 && cr_rhythm > 0.4){
+    else if(cr_rhythm[cr_rhythm.length-1] < 0.7 && cr_rhythm[cr_rhythm.length-1] > 0.4){
         return "medium"
     }
     else{
@@ -55,7 +55,7 @@ const active_request = (params) =>{
 
         if (typeof params !== 'undefined') params['api_key'] = credential.API_KEY;
         else params = {api_key:credential.API_KEY};
-        
+
         request(url, {qs:params}, function(err, response, body){
             if (err) reject(err);
             else resolve(JSON.parse(body));
