@@ -1,4 +1,6 @@
-
+const request = require('request');
+var config = require("../config/config");
+var credential = require("../config/credential");
 
 const hr_max =  (age) => {
     return 217 - (0.85 * age);
@@ -47,7 +49,22 @@ const diff = async (a_list) => {
     return res
 }
 
+const active_request = (params) =>{
+    return new Promise(async(resolve, reject) => {
+        let url = `${config.PROTOCOL}://${config.ACTIVE_API_BASE}/${config.ACTIVE_API_VERSION}/${config.ACTIVE_API_SEARCH}/`;
+
+        if (typeof params !== 'undefined') params['api_key'] = credential.API_KEY;
+        else params = {api_key:credential.API_KEY};
+        
+        request(url, {qs:params}, function(err, response, body){
+            if (err) reject(err);
+            else resolve(JSON.parse(body));
+        });
+    });
+}
+
 module.exports = {
     estimate_cr,
-    deter_intensity
+    deter_intensity,
+    active_request
 }

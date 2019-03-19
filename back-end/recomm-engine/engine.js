@@ -1,7 +1,7 @@
 var reqeust = require('request');
 var config = require("../config/config");
 var credential = require("../config/credential");
-const {estimate_cr, deter_intensity} = require("./engine-lib");
+const {estimate_cr, deter_intensity, active_request} = require("./engine-lib");
 const EXERINTENSITYLIB = require('./exer-intensity');
 
 const fs = require('fs');
@@ -12,7 +12,7 @@ const search_activities = async (heart_rates, curr_time, lat, lon) => {
     let intensity = await deter_intensity(heart_rates);
     
     let topic_names = await _build_topic_name(intensity);
-    let qry = await _build_query(lat, lon, topic_names);
+    let qry = await _build_query(lat, lon, topic_names, curr_time);
     console.log(qry)
     let activities = await _get_activities(qry);
 
@@ -95,7 +95,7 @@ const main = async () => {
         x : [1,3,4,6,7,8],
         y : [1,2,4,2,3,1] 
     }
-    await search_activities(heart_rates, new Date(), "33.6295", "-117.8684");
+    await search_activities(heart_rates, "2019-03-17T15:00:00", "33.6295", "-117.8684", );
 }
 
 main();

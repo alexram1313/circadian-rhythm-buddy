@@ -1,8 +1,15 @@
 var express = require('express');
 var app = express();
 require('dotenv').config({path:__dirname + '/.env'});
+var bodyParser = require('body-parser');
 
 var routes = require('./routes');
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+ 
+// parse application/json
+app.use(bodyParser.json());
 
 // Set up routes
 app.use(express.static('public'));
