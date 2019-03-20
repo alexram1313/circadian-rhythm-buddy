@@ -1,7 +1,8 @@
 
 var express = require('express');
 var router = express.Router();
-var UserInfoExport = require('../../model/user-info')
+var UserInfoExport = require('../../model/user-info');
+var UserTopicCount = require('../../model/user-topic-count');
 
 var recomEngine = require('../../recomm-engine/engine');
 
@@ -47,8 +48,24 @@ router.get('/activities', async function(req,res){
     res.json(activities);
 });
 
-router.post('/activities/:id', function(req, res){
+router.post('/activities/:guid', function(req, res){
+    res.status(200).json({'success':true, 'message':`Event ID ${req.params.guid} has been selected`});
 
+    setImmediate(async()=>{
+        try {
+            let activity = await recomEngine.search_by_id(req.params.guid);
+            let assetTopics = activity.assetTopics;
+    
+            assetTopics.forEach(elem => {
+                UserTopicCount.UserTopicCount.findOneAndUpdate({topic_name:elem.topic.topicName}, 
+                    {$inc:{count: 1}},
+                {upsert: true}).exec();
+            });
+        } catch (err){
+            //Do nothing
+        }
+        
+    }); 
 })
 
 module.exports = router;

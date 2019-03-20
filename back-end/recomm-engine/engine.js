@@ -53,6 +53,25 @@ const search_activities = async (heart_rates, curr_time, lat, lon) => {
     return activities;
 }
 
+const search_by_id = async (guid) => {
+    const qry = `api_key=${credential.API_KEY}&asset.assetGuid=${guid}`;
+    return new Promise(async (resolve, reject)=>{
+        try {
+            let activity = await _get_activities(qry);
+    
+            if (activity.length){
+                resolve(activity[0]);
+            } else {
+                reject();
+            }
+        } catch (err){
+            reject(err);
+        }
+    });
+    
+    
+}
+
 const filter_out = async (activities, curr_time) => {
     
 
@@ -132,5 +151,6 @@ const main = async () => {
 main();
 
 module.exports = {
-    search_activities
+    search_activities,
+    search_by_id
 };
