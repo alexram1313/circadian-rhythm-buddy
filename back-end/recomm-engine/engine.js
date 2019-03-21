@@ -53,7 +53,24 @@ const search_activities = async (heart_rates, curr_time, lat, lon) => {
 
     let info = await UserInfo.UserInfo.findOne({}).exec();
     // let intensity = await deter_intensity(heart_rates);
-    let intensity = cr_calc.determine_state(heartRates, info.records.age, info.records.gender);
+    let intensity;
+    if (heartRates.length){
+        intensity = cr_calc.determine_state(heartRates, info.records.age, info.records.gender);
+    } else {
+        let wake = Number(info.records.wake.split(':')[0]);
+        let sleep= Number(info.records.sleep.split(':')[0]);
+
+        let now = new Date();
+        if (now <= wake + 4){
+            intensity = 'high';
+        } else if (now > wake + 6 || now <= wake + 10) {
+            intensity = 'low';
+        } else if (now >= sleep - 2){
+            intensity = 'low';
+        } else {
+            intensity = 'medium;'
+        }
+    }
     
     let topic_names = await _build_topic_name(intensity);
 
