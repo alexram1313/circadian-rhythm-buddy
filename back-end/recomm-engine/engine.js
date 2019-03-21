@@ -2,6 +2,9 @@ var reqeust = require('request');
 var config = require("../config/config");
 var credential = require("../config/credential");
 const {estimate_cr, deter_intensity, active_request} = require("./engine-lib");
+
+const cr_calc = require('../cr_calc');
+
 const EXERINTENSITYLIB = require('./exer-intensity');
 
 var UserInfo = require('../model/user-info');
@@ -9,10 +12,48 @@ var TopicCount = require('../model/user-topic-count');
 
 const fs = require('fs');
 
+var heartRates = [
+    {
+        hour: 5,
+        heart_rate: 65
+    },
+    {
+        hour: 5.1,
+        heart_rate: 70
+    },
+    {
+        hour: 5.2,
+        heart_rate: 69
+    },
+    {
+        hour: 5.3,
+        heart_rate: 65
+    },
+    {
+        hour: 5.4,
+        heart_rate: 64
+    },
+    {
+        hour: 5.5,
+        heart_rate: 69
+    },
+    {
+        hour: 5.6,
+        heart_rate: 72
+    }
+];
+
+
+const update_heart_rates = (heart_rates) => {
+    heartRates = heart_rates;
+}
 
 const search_activities = async (heart_rates, curr_time, lat, lon) => {
     
-    let intensity = await deter_intensity(heart_rates);
+
+    let info = await UserInfo.UserInfo.findOne({}).exec();
+    // let intensity = await deter_intensity(heart_rates);
+    let intensity = cr_calc.determine_state(heartRates, info.records.age, info.records.gender);
     
     let topic_names = await _build_topic_name(intensity);
 
@@ -148,9 +189,10 @@ const main = async () => {
     await search_activities(heart_rates, "2019-03-17T15:00:00", "33.6295", "-117.8684", );
 }
 
-main();
+// main();
 
 module.exports = {
     search_activities,
-    search_by_id
+    search_by_id,
+    update_heart_rates
 };

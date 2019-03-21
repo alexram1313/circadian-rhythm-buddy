@@ -39,11 +39,37 @@ router.get('/activities', async function(req,res){
     if (typeof req.query.lon === 'undefined') return res.status(400).json({'success':false, 'message':'Must include lon in GET request.'});
 
     
-    let heart_rates = {
-        x : [1,3,4,6,7,8],
-        y : [1,2,4,2,3,1] 
-    };
-    let activities = await recomEngine.search_activities(heart_rates, "2019-03-17T15:00:00", "33.6295", "-117.8684" );
+    const dataMed = [
+        {
+            hour: 5,
+            heart_rate: 65
+        },
+        {
+            hour: 5.1,
+            heart_rate: 70
+        },
+        {
+            hour: 5.2,
+            heart_rate: 69
+        },
+        {
+            hour: 5.3,
+            heart_rate: 65
+        },
+        {
+            hour: 5.4,
+            heart_rate: 64
+        },
+        {
+            hour: 5.5,
+            heart_rate: 69
+        },
+        {
+            hour: 5.6,
+            heart_rate: 72
+        }
+    ];
+    let activities = await recomEngine.search_activities(dataMed, "2019-03-17T15:00:00", "33.6295", "-117.8684" );
     console.log(activities);
     res.json(activities);
 });
@@ -71,7 +97,8 @@ router.post('/activities/:guid', function(req, res){
 router.post('/circadian', function(req,res){
     if (typeof req.body.rates === 'undefined') return res.status(400).json({'success':false, 'message':'Must include rates in POST request.'});
 
-    
+    recomEngine.update_heart_rates(req.body.rates);
+    res.status(200).json({'success':true, 'message':`Heart rates inserted`});
 });
 
 module.exports = router;
