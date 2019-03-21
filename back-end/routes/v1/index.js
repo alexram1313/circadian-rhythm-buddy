@@ -66,6 +66,12 @@ router.post('/activities/:guid', function(req, res){
         }
         
     }); 
-})
+});
+
+router.post('/circadian', function(req,res){
+    if (typeof req.body.rates    === 'undefined') return res.status(400).json({'success':false, 'message':'Must include rates in POST request.'});
+
+    
+});
 
 module.exports = router;

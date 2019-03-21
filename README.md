@@ -21,4 +21,39 @@
 `POST http://pluto.calit2.uci.edu:8084/v1/activities/{assetGuid}`
 
 ### Insert Heart Rate info
-Coming soon
+`POST /circadian`
+- Body 
+  ```json
+    {
+        "rates":[
+            {
+                "hour": 5,
+                "heart_rate": 65
+            },
+            {
+                "hour": 5.1,
+                "heart_rate": 70
+            },
+            {
+                "hour": 5.2,
+                "heart_rate": 69
+            },
+            {
+                "hour": 5.3,
+                "heart_rate": 65
+            },
+            {
+                "hour": 5.4,
+                "heart_rate": 64
+            },
+            {
+                "hour": 5.5,
+                "heart_rate": 57
+            },
+            {
+                "hour": 5.6,
+                "heart_rate": 52
+            }
+        ]
+    }
+  ```
