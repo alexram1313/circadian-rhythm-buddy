@@ -21,7 +21,7 @@
 `POST http://pluto.calit2.uci.edu:8084/v1/activities/{assetGuid}`
 
 ### Insert Heart Rate info
-`POST /circadian`
+`POST http://pluto.calit2.uci.edu:8084/v1/circadian`
 - Body 
   ```json
     {
