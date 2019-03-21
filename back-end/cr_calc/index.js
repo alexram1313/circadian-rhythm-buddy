@@ -19,11 +19,19 @@ const determine_state = function(hr_data, age, gender){
     let avgLow = AVG_LOW+offset;
     let avgHigh= AVG_HIGH+offset;
 
-    let ageOffset = 0.0324200913 * Math.abs(age-50);
+    let ageOffset = 0.0324200913 * Math.abs((age||50)-50);
 
     // 71 = 73 * x * 30
 
-    if (gender == 'male'){
+    if (gender == 'female'){
+        if (lastRate <= avgLow*FEMALE_SCALE-ageOffset){
+            return 'low';
+        } else if (lastRate > avgLow*FEMALE_SCALE-ageOffset && lastRate <= avgHigh*FEMALE_SCALE-ageOffset){
+            return 'medium';
+        } else if (lastRate > avgHigh*FEMALE_SCALE-ageOffset){
+            return 'high';
+        }
+    } else {
         if (lastRate <= avgLow-ageOffset){
             return 'low';
         } else if (lastRate > avgLow-ageOffset && lastRate <= avgHigh-ageOffset){
@@ -32,14 +40,6 @@ const determine_state = function(hr_data, age, gender){
             return 'high';
         }
 
-    } else if (gender == 'female'){
-        if (lastRate <= avgLow*FEMALE_SCALE-ageOffset){
-            return 'low';
-        } else if (lastRate > avgLow*FEMALE_SCALE-ageOffset && lastRate <= avgHigh*FEMALE_SCALE-ageOffset){
-            return 'medium';
-        } else if (lastRate > avgHigh*FEMALE_SCALE-ageOffset){
-            return 'high';
-        }
     }
 
 }
