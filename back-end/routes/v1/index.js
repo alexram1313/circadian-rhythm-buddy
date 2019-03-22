@@ -69,7 +69,7 @@ router.get('/activities', async function(req,res){
             heart_rate: 72
         }
     ];
-    let activities = await recomEngine.search_activities(dataMed, (new Date()).toISOString(), "33.6295", "-117.8684" );
+    let activities = await recomEngine.search_activities(dataMed, (new Date()).toISOString(), req.query.lat||"33.6295", req.query.lon||"-117.8684" );
     console.log(activities);
     res.json(activities);
 });
